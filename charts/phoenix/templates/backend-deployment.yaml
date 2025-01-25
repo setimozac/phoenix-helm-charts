@@ -7,8 +7,8 @@ metadata:
     operator-controller: phoenix-envmanager-backend
     app.kubernetes.io/name: phoenix-backend
 spec:
-  {{- if not .Values.phoenix-backend.autoscaling.enabled }}
-    replicas: {{ .Values.phoenix-backend.replicaCount }}
+  {{- if not .Values.phoenixBackend.autoscaling.enabled }}
+    replicas: {{ .Values.phoenixBackend.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
@@ -26,11 +26,11 @@ spec:
       - command:
         - /app
         - -dsn=host=phoenix-backend-db.operators.svc.cluster.local port=5432 user=postgres password=postgres dbname=env_manager timezone=UTC connect_timeout=5
-        name: {{ .Values.phoenix-backend.containerName }}
-        image: "{{ .Values.phoenix-backend.image.repository }}:{{ .Values.phoenix-backend.image.tag }}"
+        name: {{ .Values.phoenixBackend.containerName }}
+        image: "{{ .Values.phoenixBackend.image.repository }}:{{ .Values.phoenixBackend.image.tag }}"
         ports:
-          - containerPort: {{ .Values.phoenix-backend.container.port }}
-        imagePullPolicy: {{ .Values.phoenix-backend.image.pullPolicy }}
+          - containerPort: {{ .Values.phoenixBackend.container.port }}
+        imagePullPolicy: {{ .Values.phoenixBackend.image.pullPolicy }}
         resources:
           limits:
             cpu: 500m
@@ -38,5 +38,5 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
-      serviceAccountName: {{ .Values.phoenix-backend.serviceAccount.name }}
+      serviceAccountName: {{ .Values.phoenixBackend.serviceAccount.name }}
       terminationGracePeriodSeconds: 10

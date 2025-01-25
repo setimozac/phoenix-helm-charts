@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.phoenix-backend-db.volumes.claimName }}
+  name: {{ .Values.phoenixDB.volumes.claimName }}
   namespace: {{ .Release.namespace }}
   labels:
     operator-controller: phoenix-envmanager-backend-db

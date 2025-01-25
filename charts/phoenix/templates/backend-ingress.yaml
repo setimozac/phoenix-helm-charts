@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: phoenix-backend
   annotations:
     kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: {{ .Values.phoenix-backend.service.scheme }}
+    alb.ingress.kubernetes.io/scheme: {{ .Values.phoenixBackend.service.scheme }}
     alb.ingress.kubernetes.io/actions.redirect-to-eks: >
         {"type":"redirect","redirectConfig":{"host":"aws.amazon.com","path":"/eks/","port":"443","protocol":"HTTPS","query":"k=v","statusCode":"HTTP_302"}}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]','[{"HTTPS": 443}]'

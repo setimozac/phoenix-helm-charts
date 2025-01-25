@@ -19,7 +19,7 @@ metadata:
   name: phoenix-backend-clusterrolebinding
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.phoenix-backend.serviceAccount.name }}
+  name: {{ .Values.phoenixBackend.serviceAccount.name }}
   namespace: {{ .Release.namespace }}
 roleRef:
   kind: ClusterRole

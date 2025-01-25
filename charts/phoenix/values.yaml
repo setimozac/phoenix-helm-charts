@@ -16,7 +16,7 @@ phoenix:
     maxReplicas: 5
     targetCPUUtilizationPercentage: 80
 
-phoenix-backend:
+phoenixBackend:
   replicaCount: 1
   serviceAccount:
     name: phoenix-backend-serviceaccount
@@ -34,7 +34,7 @@ phoenix-backend:
   service:
     scheme: internet-facing
 
-phoenix-db:
+phoenixDB:
   replicaCount: 1
   image:
     repository: setimo/phoenix-backend

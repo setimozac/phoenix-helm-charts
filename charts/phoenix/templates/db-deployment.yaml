@@ -7,8 +7,8 @@ metadata:
     operator-controller: phoenix-envmanager-backend-db
     app.kubernetes.io/name: phoenix-backend-db
 spec:
-  {{- if not .Values.phoenix-backend-db.autoscaling.enabled }}
-      replicas: {{ .Values.phoenix-backend-db.replicaCount }}
+  {{- if not .Values.phoenixDB.autoscaling.enabled }}
+      replicas: {{ .Values.phoenixDB.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
@@ -23,11 +23,11 @@ spec:
         app.kubernetes.io/name: phoenix-backend-db
     spec:
       containers:
-      - image: "{{ .Values.phoenix-backend-db.image.repository }}:{{ .Values.phoenix-backend-db.image.tag }}"
-        name: {{ .Values.phoenix-backend-db.containerName }}
+      - image: "{{ .Values.phoenixDB.image.repository }}:{{ .Values.phoenixDB.image.tag }}"
+        name: {{ .Values.phoenixDB.containerName }}
         ports:
           - containerPort: 5432
-        imagePullPolicy: {{ .Values.phoenix-backend-db.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.phoenixDB.image.pullPolicy }}
         resources:
           limits:
             cpu: 500m
@@ -36,6 +36,6 @@ spec:
             cpu: 10m
             memory: 64Mi
       volumes:
-        - name: {{ .Values.phoenix-backend-db.volumes.name }}
+        - name: {{ .Values.phoenixDB.volumes.name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.phoenix-backend-db.volumes.claimName }}
+            claimName: {{ .Values.phoenixDB.volumes.claimName }}

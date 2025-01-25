@@ -3,7 +3,17 @@ entries:
   phoenix:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2025-01-24T14:47:03.44775-05:00"
+    created: "2025-01-24T19:54:22.633633-05:00"
+    description: A Helm chart for Kubernetes
+    digest: f5293ea97ec9ab564969dee5fd1f9552e5c1be7aaf858a2969e6f435df72cebb
+    name: phoenix
+    type: application
+    urls:
+    - https://setimozac.github.io/phoenix-helm-charts/packaged/phoenix-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2025-01-24T19:54:22.632873-05:00"
     description: A Helm chart for Kubernetes
     digest: 8d82443f229ba94c96703fb5e7a31d13aaf6ee4f6ed02158ba3f113a12a196b2
     name: phoenix
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://setimozac.github.io/phoenix-helm-charts/packaged/phoenix-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-24T14:47:03.435436-05:00"
+generated: "2025-01-24T19:54:22.626836-05:00"
