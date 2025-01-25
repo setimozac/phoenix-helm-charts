@@ -37,7 +37,7 @@ phoenixBackend:
 phoenixDB:
   replicaCount: 1
   image:
-    repository: setimo/phoenix-backend
+    repository: setimo/phoenix-backend-db
     tag: "0.0.1"
     pullPolicy: IfNotPresent
   autoscaling:
@@ -48,8 +48,12 @@ phoenixDB:
   volumes:
     name: postgres-data
     claimName: postgres-pvc
+    storageClassName: postgres-sc
 
 
 
 # helm package charts/chart-name -d packaged
 # helm repo index packaged --url https://setimozac.github.io/phoenix-helm-charts/packaged
+
+
+

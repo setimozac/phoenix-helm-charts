@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: phoenix-backend-db
 spec:
   {{- if not .Values.phoenixDB.autoscaling.enabled }}
-      replicas: {{ .Values.phoenixDB.replicaCount }}
+  replicas: {{ .Values.phoenixDB.replicaCount }}
   {{- end }}
   selector:
     matchLabels:

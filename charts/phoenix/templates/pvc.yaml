@@ -1,3 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.phoenixDB.volumes.storageClassName }}
+provisioner: efs.csi.aws.com
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -9,6 +15,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: {{ .Values.phoenixDB.volumes.storageClassName }}
   resources:
     requests:
       storage: 2Gi
