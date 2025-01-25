@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phoenix-envmanager-backend-db
+  namespace: {{ .Release.namespace }}
+  labels:
+    operator-controller: phoenix-envmanager-backend-db
+    app.kubernetes.io/name: phoenix-backend-db
+spec:
+  {{- if not .Values.phoenix-backend-db.autoscaling.enabled }}
+      replicas: {{ .Values.phoenix-backend-db.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      operator-controller: phoenix-envmanager-backend-db
+      app.kubernetes.io/name: phoenix-backend-db
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: phoenix-backend-db
+      labels:
+        operator-controller: phoenix-envmanager-backend-db
+        app.kubernetes.io/name: phoenix-backend-db
+    spec:
+      containers:
+      - image: "{{ .Values.phoenix-backend-db.image.repository }}:{{ .Values.phoenix-backend-db.image.tag }}"
+        name: {{ .Values.phoenix-backend-db.containerName }}
+        ports:
+          - containerPort: 5432
+        imagePullPolicy: {{ .Values.phoenix-backend-db.image.pullPolicy }}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+      volumes:
+        - name: {{ .Values.phoenix-backend-db.volumes.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.phoenix-backend-db.volumes.claimName }}

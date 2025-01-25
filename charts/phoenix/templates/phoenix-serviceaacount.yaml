@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: phoenix-operator-serviceaccount
+  namespace: {{ .Release.namespace }}
+  labels:
+    app.kubernetes.io/name: phoenix

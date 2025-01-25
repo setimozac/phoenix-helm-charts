@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "phoenix.fullname" . }}-test-connection"
+  namespace: {{ .Release.namespace }}
+  name: "backend-test-connection"
   labels:
-    {{- include "phoenix.labels" . | nindent 4 }}
+    app.kubernetes.io/name: phoenix-backend-connection-test
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +12,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "phoenix.fullname" . }}:{{ .Values.service.port }}']
+      args: ['phoenix-backend:80/']
   restartPolicy: Never

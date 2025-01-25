@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.phoenix-backend-db.volumes.claimName }}
+  namespace: {{ .Release.namespace }}
+  labels:
+    operator-controller: phoenix-envmanager-backend-db
+    app.kubernetes.io/name: phoenix-backend-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
