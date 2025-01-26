@@ -38,7 +38,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: {{ .Values.phoenix.serviceAccount.name }}
-  namespace: operators
+  namespace: {{ .Values.namespace }}
 roleRef:
   kind: ClusterRole
   name: phoenix-operator-clusterrole

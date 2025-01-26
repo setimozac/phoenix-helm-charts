@@ -1,4 +1,5 @@
 baseDomain: "phoenix.setimozac"
+namespace: operators
 
 phoenix:
   replicaCount: 1
@@ -52,6 +53,7 @@ phoenixDB:
     name: postgres-data
     claimName: postgres-pvc
     storageClassName: postgres-sc
+    fileSystemId: ""
 
 
 

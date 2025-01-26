@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.phoenixDB.volumes.storageClassName }}
 provisioner: efs.csi.aws.com
 parameters:
-  fileSystemId: fs-0000
+  fileSystemId: {{ .Values.phoenixDB.volumes.fileSystemId }}
   directoryperms: "700"
 ---
 apiVersion: v1

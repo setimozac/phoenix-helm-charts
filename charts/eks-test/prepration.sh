@@ -76,10 +76,12 @@ helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-dr
 
 
 # FILE_SYSTEM_ID=$(aws efs create-file-system --creation-token phoenix-token --region us-east-1 --query 'FileSystemId' --output text)
-# VPC_ID=$(aws eks describe-cluster --name eks-phoenix --region us-east-1 --query 'cluster.resourceVpcConfig.vpcId' --output text)
-# SUBNETS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Value=$VPC_ID" --query 'Subnets[].SubnetId' --output text)
+# VPC_ID=$(aws eks describe-cluster --name eks-phoenix --region us-east-1 --query 'cluster.resourcesVpcConfig.vpcId' --output text)
+# SUBNETS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" --query 'Subnets[].SubnetId' --output text)
+# WORKER_NODES_SG=$(aws ec2 describe-instances --filters "Name=tag:aws:eks:cluster-name,Values=eks-phoenix" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].SecurityGroups[0].GroupId" --output text)
+# aws ec2 authorize-security-group-ingress --group-id $WORKER_NODES_SG --protocol tcp --port 2049 --cidr 10.0.0.0/16
 # for SUBNET in $SUBNETS; do
-#   aws efs create-mount-target --file-system-id $FILE_SYSTEM_ID --subnet-id $SUBNET --security-groups <SG-id> #SG that allows inbound NFS traffic(port 2049) from worker nodes SG
+#   aws efs create-mount-target --file-system-id $FILE_SYSTEM_ID --subnet-id $SUBNET --security-groups WORKER_NODES_SG
 # done
 # aws efs describe-file-systems --file-system-id $FILE_SYSTEM_ID
 # aws efs describe-mount-targets --file-system-id $FILE_SYSTEM_ID
