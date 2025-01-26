@@ -13,9 +13,10 @@ chmod 700 get_helm.sh
 # need to create the cluster before executing bellow command.
 eksctl create cluster -f ./cluster.yaml
 
+echo "------------------------- Associate OIDC"
 eksctl utils associate-iam-oidc-provider --cluster eks-phoenix --approve
 
-
+echo "------------------------- Install AWS loadbalancer"
 curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.11.0/docs/install/iam_policy.json
 POLICY_ARN=$(aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
@@ -37,13 +38,14 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set serviceAccount.create=false \
   --set serviceAccount.name=aws-load-balancer-controller
 
+echo "------------------------- Install external DNS"
 helm repo add external-dns https://kubernetes-sigs.github.io/external-dns
 eksctl create iamserviceaccount \
   --cluster=eks-phoenix \
   --name=external-dns-service-account \
   --attach-policy-arn arn:aws:iam::aws:policy/AmazonRoute53FullAccess --approve 
 helm upgrade --install external-dns \
-  --set serviceAccount.create=false
+  --set serviceAccount.create=false \
   --set serviceAccount.name=external-dns-service-account \
   external-dns/external-dns
 
@@ -51,6 +53,7 @@ helm upgrade --install external-dns \
 
 # IAM Role for EKS norker nodes to access EFS file system 
 # https://github.com/kubernetes-sigs/aws-efs-csi-driver/blob/master/docs/iam-policy-create.md
+echo "------------------------- Install EFS CSI driver"
 curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-efs-csi-driver/master/docs/iam-policy-example.json
 EFS_POLICY_ARN=$(aws iam create-policy \
     --policy-name EKS_EFS_CSI_Driver_Policy \
@@ -74,14 +77,22 @@ helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-dr
   --set controller.serviceAccount.name=efs-csi-controller-sa  
 
 
-
-# FILE_SYSTEM_ID=$(aws efs create-file-system --creation-token phoenix-token --region us-east-1 --query 'FileSystemId' --output text)
-# VPC_ID=$(aws eks describe-cluster --name eks-phoenix --region us-east-1 --query 'cluster.resourcesVpcConfig.vpcId' --output text)
-# SUBNETS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" --query 'Subnets[].SubnetId' --output text)
-# WORKER_NODES_SG=$(aws ec2 describe-instances --filters "Name=tag:aws:eks:cluster-name,Values=eks-phoenix" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].SecurityGroups[0].GroupId" --output text)
-# aws ec2 authorize-security-group-ingress --group-id $WORKER_NODES_SG --protocol tcp --port 2049 --cidr 10.0.0.0/16
-# for SUBNET in $SUBNETS; do
-#   aws efs create-mount-target --file-system-id $FILE_SYSTEM_ID --subnet-id $SUBNET --security-groups WORKER_NODES_SG
-# done
+echo "------------------------- Mount EFS"
+FILE_SYSTEM_ID=$(aws efs create-file-system --creation-token phoenix-token --region us-east-1 --query 'FileSystemId' --output text)
+VPC_ID=$(aws eks describe-cluster --name eks-phoenix --region us-east-1 --query 'cluster.resourcesVpcConfig.vpcId' --output text)
+SUBNETS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" --query 'Subnets[].SubnetId' --output text)
+WORKER_NODES_SG=$(aws ec2 describe-instances --filters "Name=tag:aws:eks:cluster-name,Values=eks-phoenix" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].SecurityGroups[0].GroupId" --output text)
+aws ec2 authorize-security-group-ingress --group-id $WORKER_NODES_SG --protocol tcp --port 2049 --cidr 10.0.0.0/16
+for SUBNET in $SUBNETS; do
+  aws efs create-mount-target --file-system-id $FILE_SYSTEM_ID --subnet-id $SUBNET --security-groups WORKER_NODES_SG
+done
 # aws efs describe-file-systems --file-system-id $FILE_SYSTEM_ID
 # aws efs describe-mount-targets --file-system-id $FILE_SYSTEM_ID
+
+
+
+
+
+
+
+# kubectl logs -n kube-system -l app=efs-csi-controller

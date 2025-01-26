@@ -15,6 +15,7 @@ metadata:
     alb.ingress.kubernetes.io/actions.redirect-to-eks: >
       {"type":"redirect","redirectConfig":{"host":"aws.amazon.com","path":"/eks/","port":"443","protocol":"HTTPS","query":"k=v","statusCode":"HTTP_302"}}
 spec:
+  ingressClassName: alb
   rules:
   - host: phoenix-backend.{{ .Values.baseDomain }}
     http:
@@ -23,13 +24,14 @@ spec:
           pathType: ImplementationSpecific
           backend:
             service:
-              name: redirect
+              name: phoenix-backend
               port: 
-                name: use-annotation
+                number: 80
         - path: "/*"
           pathType: ImplementationSpecific
           backend:
             service:
-              name: phoenix-backend
+              name: redirect
               port: 
-                number: 80
+                name: use-annotation
+        

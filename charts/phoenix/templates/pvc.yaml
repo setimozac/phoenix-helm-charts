@@ -4,8 +4,13 @@ metadata:
   name: {{ .Values.phoenixDB.volumes.storageClassName }}
 provisioner: efs.csi.aws.com
 parameters:
+  provisioningMode: efs-ap
   fileSystemId: {{ .Values.phoenixDB.volumes.fileSystemId }}
-  directoryperms: "700"
+  directoryPerms: "700"
+  gidRangeStart: "1000"
+  gidRangeEnd: "2000"
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
