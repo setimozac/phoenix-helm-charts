@@ -3,6 +3,9 @@ kind: StorageClass
 metadata:
   name: {{ .Values.phoenixDB.volumes.storageClassName }}
 provisioner: efs.csi.aws.com
+parameters:
+  fileSystemId: fs-0000
+  directoryperms: "700"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

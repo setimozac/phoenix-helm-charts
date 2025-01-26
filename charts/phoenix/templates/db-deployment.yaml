@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.phoenixDB.image.repository }}:{{ .Values.phoenixDB.image.tag }}"
-        name: {{ .Values.phoenixDB.containerName }}
+        name: {{ .Values.phoenixDB.container.name }}
         ports:
           - containerPort: 5432
         imagePullPolicy: {{ .Values.phoenixDB.image.pullPolicy }}

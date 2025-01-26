@@ -20,7 +20,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: {{ .Values.phoenixBackend.serviceAccount.name }}
-  namespace: {{ .Release.namespace }}
+  namespace: operators
 roleRef:
   kind: ClusterRole
   name: phoenix-backend-clusterrole

@@ -26,7 +26,7 @@ spec:
       - command:
         - /app
         - -dsn=host=phoenix-backend-db.operators.svc.cluster.local port=5432 user=postgres password=postgres dbname=env_manager timezone=UTC connect_timeout=5
-        name: {{ .Values.phoenixBackend.containerName }}
+        name: {{ .Values.phoenixBackend.container.name }}
         image: "{{ .Values.phoenixBackend.image.repository }}:{{ .Values.phoenixBackend.image.tag }}"
         ports:
           - containerPort: {{ .Values.phoenixBackend.container.port }}
