@@ -7,10 +7,12 @@ metadata:
     operator-controller: phoenix-envmanager-backend
     app.kubernetes.io/name: phoenix-backend
 spec:
+  type: NodePort
   selector:
     operator-controller: phoenix-envmanager-backend
     app.kubernetes.io/name: phoenix-backend
   ports:
-    - protocol: TCP
+    - name: phoenix-backend
+      protocol: TCP
       port: 80
       targetPort: {{ .Values.phoenixBackend.container.port }}

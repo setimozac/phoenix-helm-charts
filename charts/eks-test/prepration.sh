@@ -84,7 +84,7 @@ SUBNETS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" --quer
 WORKER_NODES_SG=$(aws ec2 describe-instances --filters "Name=tag:aws:eks:cluster-name,Values=eks-phoenix" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].SecurityGroups[0].GroupId" --output text)
 aws ec2 authorize-security-group-ingress --group-id $WORKER_NODES_SG --protocol tcp --port 2049 --cidr 10.0.0.0/16
 for SUBNET in $SUBNETS; do
-  aws efs create-mount-target --file-system-id $FILE_SYSTEM_ID --subnet-id $SUBNET --security-groups WORKER_NODES_SG
+  aws efs create-mount-target --file-system-id $FILE_SYSTEM_ID --subnet-id $SUBNET --security-groups $WORKER_NODES_SG
 done
 # aws efs describe-file-systems --file-system-id $FILE_SYSTEM_ID
 # aws efs describe-mount-targets --file-system-id $FILE_SYSTEM_ID
@@ -94,5 +94,8 @@ done
 
 
 
-
+# helm upgrade --install phoenix --set phoenixDB.volumes.fileSystemId=<FID> --set baseDomain=$base_domain --set phoenixDB.volumes.storageClassName=efs-sc -n operators --create-namespace .
 # kubectl logs -n kube-system -l app=efs-csi-controller
+# kubectl logs -n operators -l app.kubernetes.io/name=external-dns
+
+# kubectl describe ingress phoenix-backend-ingress -n operators 

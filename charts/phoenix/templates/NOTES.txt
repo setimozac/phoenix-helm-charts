@@ -1,1 +1,3 @@
---set phoenixDB.volumes.storageClassName=<FS-0000>
+--set phoenixDB.volumes.storageClassName=efs-cs
+--set phoenixDB.volumes.fileSystemId=<FS-0000>
+--set baseDomain=$base_domain

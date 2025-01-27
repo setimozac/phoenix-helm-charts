@@ -23,7 +23,7 @@ phoenixBackend:
     name: phoenix-backend-serviceaccount
   image:
     repository: setimo/phoenix-backend
-    tag: "0.0.1"
+    tag: "0.0.2"
     pullPolicy: IfNotPresent
   autoscaling:
     enabled: false
