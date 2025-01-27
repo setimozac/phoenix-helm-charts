@@ -6,11 +6,13 @@ metadata:
   labels:
     operator-controller: phoenix-envmanager-backend
     app.kubernetes.io/name: phoenix-backend
+    # app: backend
 spec:
   type: NodePort
   selector:
     operator-controller: phoenix-envmanager-backend
     app.kubernetes.io/name: phoenix-backend
+    app: backend
   ports:
     - name: phoenix-backend
       protocol: TCP

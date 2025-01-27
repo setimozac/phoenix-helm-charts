@@ -6,6 +6,7 @@ metadata:
   labels:
     operator-controller: phoenix-envmanager-backend
     app.kubernetes.io/name: phoenix-backend
+    app: backend
 spec:
   {{- if not .Values.phoenixBackend.autoscaling.enabled }}
   replicas: {{ .Values.phoenixBackend.replicaCount }}
@@ -13,12 +14,16 @@ spec:
   selector:
     matchLabels:
       operator-controller: phoenix-envmanager-backend
+      app.kubernetes.io/name: phoenix-backend
+      app: backend
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: phoenix-backend
       labels:
         operator-controller: phoenix-envmanager-backend
+        app.kubernetes.io/name: phoenix-backend
+        app: backend
     spec:
       securityContext:
         runAsNonRoot: true

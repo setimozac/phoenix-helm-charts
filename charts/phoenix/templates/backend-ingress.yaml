@@ -10,27 +10,27 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: {{ .Values.phoenixBackend.service.scheme }}
     alb.ingress.kubernetes.io/load-balancer-attributes: "idle_timeout.timeout_seconds=360"
-    alb.ingress.kubernetes.io/group.name: {{ .Release.namespace }}
+    alb.ingress.kubernetes.io/group.name: operators
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/actions.redirect: '{"type":"redirect","redirectConfig":{"port":"443","protocol":"HTTPS","statusCode":"HTTP_301"}}'
 spec:
   ingressClassName: alb
   rules:
   - host: phoenix-backend.{{ .Values.baseDomain }}
-  http:
-    paths:
-      - path: "/*"
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: phoenix-backend
-            port: 
-              number: 80
-      - path: "/*"
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: redirect
-            port: 
-              name: use-annotation
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: phoenix-backend
+              port: 
+                number: 80
+        - path: "/*"
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: redirect
+              port: 
+                name: use-annotation
         
