@@ -55,6 +55,23 @@ phoenixDB:
     storageClassName: postgres-sc
     fileSystemId: ""
 
+phoenixFrontend:
+  replicaCount: 1
+  image:
+    repository: setimo/phoenix-frontend
+    tag: "0.0.4"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+  container:
+    port: 80
+    name: frontend
+  service:
+    scheme: internet-facing
+
 
 
 # helm package charts/chart-name -d packaged

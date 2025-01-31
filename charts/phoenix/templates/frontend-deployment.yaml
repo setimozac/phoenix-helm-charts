@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phoenix-envmanager-frontend
+  namespace: {{ .Release.namespace }}
+  labels:
+    operator-controller: phoenix-envmanager-frontend
+    app.kubernetes.io/name: phoenix-frontend
+    app: frontend
+spec:
+  {{- if not .Values.phoenixFrontend.autoscaling.enabled }}
+  replicas: {{ .Values.phoenixFrontend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      operator-controller: phoenix-envmanager-frontend
+      app.kubernetes.io/name: phoenix-frontend
+      app: frontend
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: phoenix-frontend
+      labels:
+        operator-controller: phoenix-envmanager-frontend
+        app.kubernetes.io/name: phoenix-frontend
+        app: frontend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        name: {{ .Values.phoenixFrontend.container.name }}
+        image: "{{ .Values.phoenixFrontend.image.repository }}:{{ .Values.phoenixFrontend.image.tag }}"
+        ports:
+          - containerPort: {{ .Values.phoenixFrontend.container.port }}
+        imagePullPolicy: {{ .Values.phoenixFrontend.image.pullPolicy }}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+      terminationGracePeriodSeconds: 10
