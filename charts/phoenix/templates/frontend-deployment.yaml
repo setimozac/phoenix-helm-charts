@@ -31,12 +31,10 @@ spec:
           ports:
             - containerPort: {{ .Values.phoenixFrontend.container.port }}
           imagePullPolicy: {{ .Values.phoenixFrontend.image.pullPolicy }}
-          env:
-            - name: REACT_APP_BACKEND_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: frontend-config
-                  key: REACT_APP_BACKEND_URL
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/share/nginx/html/config.json
+              subPath: config.json
           resources:
             limits:
               cpu: 500m
@@ -44,4 +42,8 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+      volumes:
+        - name: config-volume
+          configMap:
+            name: frontend-config
       terminationGracePeriodSeconds: 10
