@@ -25,19 +25,23 @@ spec:
         app.kubernetes.io/name: phoenix-frontend
         app: frontend
     spec:
-      securityContext:
-        runAsNonRoot: true
       containers:
-        name: {{ .Values.phoenixFrontend.container.name }}
-        image: "{{ .Values.phoenixFrontend.image.repository }}:{{ .Values.phoenixFrontend.image.tag }}"
-        ports:
-          - containerPort: {{ .Values.phoenixFrontend.container.port }}
-        imagePullPolicy: {{ .Values.phoenixFrontend.image.pullPolicy }}
-        resources:
-          limits:
-            cpu: 500m
-            memory: 128Mi
-          requests:
-            cpu: 10m
-            memory: 64Mi
+        - name: {{ .Values.phoenixFrontend.container.name }}
+          image: "{{ .Values.phoenixFrontend.image.repository }}:{{ .Values.phoenixFrontend.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.phoenixFrontend.container.port }}
+          imagePullPolicy: {{ .Values.phoenixFrontend.image.pullPolicy }}
+          env:
+            - name: REACT_APP_BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: REACT_APP_BACKEND_URL
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
       terminationGracePeriodSeconds: 10

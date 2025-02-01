@@ -21,14 +21,14 @@ spec:
       paths:
         - path: /
           pathType: Prefix
-          frontend:
+          backend:
             service:
               name: phoenix-frontend
               port: 
                 number: 80
         - path: "/*"
           pathType: ImplementationSpecific
-          frontend:
+          backend:
             service:
               name: redirect
               port: 

@@ -93,8 +93,8 @@ done
 
 
 
-# base_domain=$(aws route53 list-hostedzones --query "HostedZones[0].Name" --output text | xargs | sed 's/.$//')
-# helm upgrade --install phoenix --set phoenixDB.volumes.fileSystemId=<FID> --set baseDomain=$base_domain --set phoenixDB.volumes.storageClassName=efs-sc -n operators --create-namespace .
+# DOMAIN_NAME=$(aws route53 list-hosted-zones --query "HostedZones[0].Name" --output text | xargs | sed 's/.$//')
+# helm upgrade --install phoenix --set phoenixDB.volumes.fileSystemId=<FID> --set baseDomain=$DOMAIN_NAME --set phoenixDB.volumes.storageClassName=efs-sc -n operators --create-namespace .
 # kubectl logs -n kube-system -l app=efs-csi-controller
 # kubectl logs -n operators -l app.kubernetes.io/name=external-dns
 
