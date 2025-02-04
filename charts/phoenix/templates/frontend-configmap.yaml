@@ -6,6 +6,6 @@ metadata:
 data:
   config.json: |
     {
-      "BACKEND_URL": "phoenix-backend.{{ .Values.baseDomain }}"
+      "BACKEND_URL": "https://phoenix-backend.{{ .Values.baseDomain }}"
     }
   
