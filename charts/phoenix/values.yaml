@@ -8,7 +8,7 @@ phoenix:
   containerName: manager
   image:
     repository: setimo/phoenix
-    tag: "0.0.1"
+    tag: "0.0.2"
     pullPolicy: IfNotPresent
 
   autoscaling:
@@ -23,7 +23,7 @@ phoenixBackend:
     name: phoenix-backend-serviceaccount
   image:
     repository: setimo/phoenix-backend
-    tag: "0.0.5"
+    tag: "0.0.10"
     pullPolicy: IfNotPresent
   autoscaling:
     enabled: false
