@@ -89,12 +89,38 @@ done
 # aws efs describe-file-systems --file-system-id $FILE_SYSTEM_ID
 # aws efs describe-mount-targets --file-system-id $FILE_SYSTEM_ID
 
+echo "------------------------- SSL Certificate"
+DOMAIN_NAME=$(aws route53 list-hosted-zones --query "HostedZones[0].Name" --output text | xargs | sed 's/.$//')
+REGION="us-east-1"
+CERT_ARN=$(aws acm request-certificate --domain-name $DOMAIN_NAME --subject-alternative-names "*.$DOMAIN_NAME" --validation-method DNS --region "$REGION" --query "CertificateArn" --output text)
+echo "Requested SSL certificate: $CERT_ARN"
+
+while true; do
+  echo "waiting for certificate to be issued..."
+  STATUS=$(aws acm describe-certificate --certificate-arn "$CERT_ARN" --region "$REGION" --query "Certificate.Status" --output text)
+  echo "Current status: $STATUS"
+
+  if [[ "$STATUS" == "ISSUED" ]]; then
+    echo "SSL certificate is ready!"
+    break
+  fi
+
+  if [[ "$STATUS" == "FAILED" ]]; then
+    echo "SSL certificate request FAILED!"
+    exit 1
+  fi
+
+  sleep 30
+done
+
+echo "Adding the helm repo"
+helm repo add setimo https://setimozac.github.io/phoenix-helm-charts/
+
+
+helm upgrade --install phoenix --set phoenixDB.volumes.fileSystemId="$FILE_SYSTEM_ID" --set baseDomain=$DOMAIN_NAME --set phoenixDB.volumes.storageClassName=efs-sc -n operators --create-namespace setimo/phoenix
 
 
 
-
-# DOMAIN_NAME=$(aws route53 list-hosted-zones --query "HostedZones[0].Name" --output text | xargs | sed 's/.$//')
-# helm upgrade --install phoenix --set phoenixDB.volumes.fileSystemId=<FID> --set baseDomain=$DOMAIN_NAME --set phoenixDB.volumes.storageClassName=efs-sc -n operators --create-namespace .
 # kubectl logs -n kube-system -l app=efs-csi-controller
 # kubectl logs -n operators -l app.kubernetes.io/name=external-dns
 
